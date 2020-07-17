@@ -8,6 +8,8 @@ export const constantRouterMap = [
     { path: '/404', component: () => import('@/views/404') },
 ]
 
+export const asyncRouterMap = []
+
 export default new Router({
     routes: constantRouterMap,
 })

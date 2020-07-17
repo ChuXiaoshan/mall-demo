@@ -61,12 +61,143 @@
             </el-form>
         </el-card>
         <img :src="login_center_bg" class="login-center-layout" />
-        <el-dialog title="公众号二维码" :visible.sync="dialogVisible"></el-dialog>
+        <el-dialog
+            title="公众号二维码"
+            :visible.sync="dialogVisible"
+            :show-close="false"
+            :center="true"
+            width="30%"
+        >
+            <div style="text-align:center;">
+                <span class="font-title-large">
+                    <span class="color-main font-extra-large">关注公众号</span>
+                    <span class="color-main font-extra-large">体验</span>
+                    获取体验账号
+                </span>
+                <br />
+                <img
+                    src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/banner/qrcode_for_macrozheng_258.jpg"
+                    width="160"
+                    height="160"
+                    style="margin-top: 10px"
+                />
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogConfirm">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import { isValidUsername } from '@/utils/validate'
+import { setSupport, getSupport, setCookie, getCookie } from '@/utils/support'
+import { login_center_bg } from '@/assets/images/login_center_bg.png'
 export default {
-    name: 'login'
+    name: 'login',
+    data() {
+        const validateUsername = (rule, value, callback) => {
+            if (!isValidUsername(value)) {
+                callback(new Error('请输入正确的用户名'))
+            } else {
+                callback()
+            }
+        };
+        const validatePass = (rule, value, callback) => {
+            if (value.length < 3) {
+                callback(new Error('密码不能小于3位'))
+            } else {
+                callback()
+            }
+        };
+        return {
+            loginForm: {
+                username: '',
+                password: '',
+            },
+            loginRules: {
+                username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                password: [{ required: true, trigger: 'blur', validator: validatePass }]
+            },
+            loading: false,
+            pwdType: 'password',
+            login_center_bg,
+            dialogVisible: false,
+            supportDialogVisible: false
+        }
+    },
+
+    created() {
+        this.loginForm.username = getCookie("username")
+        this.loginForm.password = getCookie("password")
+        if (this.loginForm.username === undefined || this.loginForm.username == null || this.loginForm.username === '') {
+            this.loginForm.username = 'admin'
+        }
+        if (this.loginForm.password === undefined || this.loginForm.password == null) {
+            this.loginForm.password = ''
+        }
+    },
+
+    methods: {
+        showPwd() {
+            if (this.pwdType === 'password') {
+                this.pwdType = ''
+            } else {
+                this.pwdType = 'password'
+            }
+        },
+        handleLogin() {
+            this.$refs.loginForm.validate(valid => {
+                if (valid) {
+                    this.loading = true
+                    this.$store.dispatch('Login', this.loginForm).then(() => {
+                        this.loading = false
+                        setCookie("username", this.loginForm.username, 15)
+                        setCookie("passowrd", this.loginForm.password, 15)
+                        this.$router.push({ path: '/' })
+                    }).catch(() => {
+                        this.loading = false
+                    })
+                } else {
+                    console.log('参数验证不合法！')
+                    return false
+                }
+            })
+        },
+        handleTry() {
+            this.dialogVisible = true
+        },
+        dialogConfirm() {
+            this.dialogVisible = false
+            setSupport(true)
+        },
+        dialogCancel() {
+            this.dialogVisible = false
+            setSupport(false)
+        }
+    }
 }
 </script>
+
+<style scoped>
+.login-form-layout {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 360px;
+    margin: 140px auto;
+    border-top: 10px solid #409eff;
+}
+.login-title {
+    text-align: center;
+}
+
+.login-center-layout {
+    background: #409eff;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 200px;
+}
+</style>
