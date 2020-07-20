@@ -1,20 +1,20 @@
 <template>
   <div>
     <el-card class="login-form-layout">
-      <el-form autocomplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+      <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
         <div style="text-align: center">
-          <svg-icon icon-class="login-mall" style="width: 56px; height: 56px; color: #409EFF" />
+          <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF" />
         </div>
         <h2 class="login-title color-main">mall-admin-web</h2>
         <el-form-item prop="username">
-          <el-input name="username" type="text" v-model="loginForm.username" autocomplete="on" placeholder="请输入用户名">
+          <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名">
             <span slot="prefix">
               <svg-icon icon-class="user" class="color-main" />
             </span>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.passowrd" autocomplete="on" placeholder="请输入密码">
+          <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码">
             <span slot="prefix">
               <svg-icon icon-class="password" class="color-main" />
             </span>
@@ -107,7 +107,6 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          console.log('---loginForm--->' + this.loginForm.password)
           this.loading = true
           this.$store
             .dispatch('Login', this.loginForm)
