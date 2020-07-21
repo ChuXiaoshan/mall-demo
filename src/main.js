@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN'
+import VCharts from 'v-charts'
 
 import '@/styles/index.scss'
 
@@ -14,6 +15,7 @@ import store from './store'
 
 import '@/icons'
 import '@/permission'
+Vue.use(VCharts)
 
 Vue.use(ElementUI, { locale })
 

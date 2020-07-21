@@ -7,8 +7,6 @@ import { getToken } from '@/utils/auth'
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
-  console.log("---to--->" + to.path)
-  console.log("---token--->" + getToken())
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
