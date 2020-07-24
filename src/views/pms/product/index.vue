@@ -8,7 +8,7 @@
         <el-button style="float: right; margin-right: 15px" @click="handleResetSearch()" size="small">重置</el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" size="small" label-width="140px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称"></el-input>
           </el-form-item>
@@ -68,7 +68,7 @@
             </p>
             <p>
               推荐：
-              <el-switch @change="handleRecommendStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0" v-model="scope.row.recommendStatus"></el-switch>
+              <el-switch @change="handleRecommendStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0" v-model="scope.row.recommandStatus"></el-switch>
             </p>
           </template>
         </el-table-column>
@@ -105,6 +105,54 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="batch-operate-container">
+      <el-select size="small" v-model="operateType" placeholder="批量操作">
+        <el-option v-for="item in operates" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+      <el-button style="margin-left:20px" class="search-button" @click="handleBatchOperate()" type="primary" size="small">确定</el-button>
+    </div>
+    <div class="pagination-container">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total  ,sizes,prev, pager, next,jumper"
+        :page-size="listQuery.pageSize"
+        :page-sizes="[5, 10, 15]"
+        :current-page.sync="listQuery.pageNum"
+        :total="total"
+      />
+    </div>
+    <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" with="40%">
+      <span>商品货号：</span>
+      <span>{{ editSkuInfo.productSn }}</span>
+      <el-input placeholder="按sku编号搜索" v-model="editSkuInfo.keyword" size="small" style="width: 50%;margin-left: 20px">
+        <el-button slot="append" icon="el-icon-search" @click="handleSearchEditSku"></el-button>
+      </el-input>
+      <el-table style="width: 100%;margin-top: 20px" :data="editSkuInfo.stockList" border>
+        <el-table-column label="SKU编号" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.skuCode"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column v-for="(item, index) in editSkuInfo.productAttr" :label="item.name" :key="item.id" align="center">
+          <template slot-scope="scope">{{ getProductSkuSp(scope.row, index) }}</template>
+        </el-table-column>
+        <el-table-column label="销售价格" width="80" align="center">
+          <template slot-scope="scope"><el-input v-model="scope.row.price"/></template>
+        </el-table-column>
+        <el-table-column label="商品库存" width="80" align="center">
+          <template slot-scope="scope"><el-input v-model="scope.row.stock"/></template>
+        </el-table-column>
+        <el-table-column label="库存预警值" width="100" align="center">
+          <template slot-scope="scope"><el-input v-model="scope.row.lowStock"/></template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-fotter">
+        <el-button @click="editSkuInfo.dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleEditSkuConfirm">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -263,7 +311,7 @@ export default {
               children.push({ label: list[i].children[j].name, value: list[i].children[j].id })
             }
           }
-          this.roductCateOptions.push({ label: list[i].name, value: list[i].id, children: children })
+          this.productCateOptions.push({ label: list[i].name, value: list[i].id, children: children })
         }
       })
     },
