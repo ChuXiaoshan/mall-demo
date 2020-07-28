@@ -64,12 +64,13 @@ export default {
   data() {
     return {
       hasEditCreated: false,
+      //选中商品分类的值
       selectProductCateValue: [],
       productCateOptions: [],
       brandOptions: [],
       rules: {
         name: [
-          { require: true, message: '请输入商品名称', trigger: 'blur' },
+          { required: true, message: '请输入商品名称', trigger: 'blur' },
           { min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur' },
         ],
         subTitle: [{ required: true, message: '请输入商品副标题', trigger: 'blur' }],
@@ -179,3 +180,5 @@ export default {
   },
 }
 </script>
+
+<style scoped></style>

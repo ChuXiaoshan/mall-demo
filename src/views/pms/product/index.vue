@@ -16,21 +16,21 @@
             <el-input style="width: 203px" v-model="listQuery.productSn" placeholder="商品货号"></el-input>
           </el-form-item>
           <el-form-item label="商品分类：">
-            <el-cascader clearable v-model="selectProductCateValue" :options="productCateOptions"> </el-cascader>
+            <el-cascader clearable v-model="selectProductCateValue" :options="productCateOptions"></el-cascader>
           </el-form-item>
           <el-form-item label="商品品牌：">
             <el-select placeholder="请选择品牌" v-model="listQuery.brandId" clearable>
-              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="上架状态：">
             <el-select placeholder="全部" v-model="listQuery.publishStatus" clearable>
-              <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="审核状态：">
             <el-select placeholder="全部" v-model="listQuery.veifyStatus" clearable>
-              <el-option v-for="item in verifyStatusOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              <el-option v-for="item in verifyStatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -56,6 +56,12 @@
             <p>品牌：{{ scope.row.brandName }}</p>
           </template>
         </el-table-column>
+        <el-table-column label="价格/货号" width="120" align="center">
+          <template slot-scope="scope">
+            <p>价格：￥{{ scope.row.price }}</p>
+            <p>货号：{{ scope.row.productSn }}</p>
+          </template>
+        </el-table-column>
         <el-table-column label="标签" width="140" align="center">
           <template slot-scope="scope">
             <p>
@@ -77,7 +83,7 @@
         </el-table-column>
         <el-table-column label="SKU库存" width="100" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" @click="handleShowSkuEditDialog(scope.$index.scope.row)" circle></el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="handleShowSkuEditDialog(scope.$index, scope.row)" circle></el-button>
           </template>
         </el-table-column>
         <el-table-column label="销量" width="100" align="center">
@@ -92,7 +98,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
-          <template solt-scope="scope">
+          <template slot-scope="scope">
             <p>
               <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看</el-button>
               <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)">编辑</el-button>
@@ -491,7 +497,7 @@ export default {
     updateNewStatus(newStatus, ids) {
       let params = new URLSearchParams()
       params.append('ids', ids)
-      params.append('newStauts', newStatus)
+      params.append('newStatus', newStatus)
       updateNewStatus(params).then(response => {
         this.$message({
           message: '修改成功',

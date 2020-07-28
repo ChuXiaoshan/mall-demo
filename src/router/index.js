@@ -43,11 +43,18 @@ export const asyncRouterMap = [
         component: () => import('@/views/pms/product/add'),
         meta: { title: '添加商品', icon: 'product-add' },
       },
+      {
+        path: 'updateProduct',
+        name: 'updateProduct',
+        component: () => import('@/views/pms/product/update'),
+        meta: { title: '修改商品', icon: 'product-add' },
+        hidden: true,
+      },
     ],
   },
 ]
 
 export default new Router({
-  scrollBehavior: () => ({y: 0}),
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap,
 })

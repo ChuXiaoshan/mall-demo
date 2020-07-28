@@ -3,19 +3,19 @@
     <el-form :model="value" ref="productAttrForm" label-width="120px" style="width: 720px" size="small">
       <el-form-item label="属性类型：">
         <el-select v-model="value.productAttributeCategoryId" placeholder="请选择属性类型" @change="handleProductAttrChange">
-          <el-option v-for="item in productAttributeCategoryOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          <el-option v-for="(item, index) in productAttributeCategoryOptions" :key="index" :label="item.label" :value="item.value"> </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品规格：">
         <el-card shadow="never" class="cardBg">
-          <div v-for="(productAttr, idx) in selectProductAttr">
+          <div v-for="(productAttr, idx) in selectProductAttr" :key="idx">
             {{ productAttr.name }}：
             <el-checkbox-group v-if="productAttr.handAddStatus === 0" v-model="selectProductAttr[idx].values">
-              <el-checkbox v-for="item in getInputListArr(productAttr.inputList)" :label="item" :key="item" class="littleMarginLeft"></el-checkbox>
+              <el-checkbox v-for="(item, index) in getInputListArr(productAttr.inputList)" :label="item" :key="index" class="littleMarginLeft"></el-checkbox>
             </el-checkbox-group>
             <div v-else>
               <el-checkbox-group v-model="selectProductAttr[idx].values">
-                <div v-for="(item, index) in selectProductAttr[idx].options" style="display: inline-block" class="littleMarginLeft">
+                <div v-for="(item, index) in selectProductAttr[idx].options" style="display: inline-block" class="littleMarginLeft" :key="index">
                   <el-checkbox :label="item" :key="item"></el-checkbox>
                   <el-button type="text" class="littleMarginLeft" @click="handleRemoveProductAttrValue(idx, index)">删除 </el-button>
                 </div>
@@ -26,7 +26,7 @@
           </div>
         </el-card>
         <el-table style="width: 100%;margin-top: 20px" :data="value.skuStockList" border>
-          <el-table-column v-for="(item, index) in selectProductAttr" :label="item.name" :key="item.id" align="center">
+          <el-table-column v-for="(item, index) in selectProductAttr" :label="item.name" :key="index" align="center">
             <template slot-scope="scope">
               {{ getProductSkuSp(scope.row, index) }}
             </template>
@@ -63,7 +63,7 @@
       </el-form-item>
       <el-form-item label="属性图片：" v-if="hasAttrPic">
         <el-card shadow="never" class="cardBg">
-          <div v-for="(item, index) in selectProductAttrPics">
+          <div v-for="(item, index) in selectProductAttrPics" :key="index">
             <span>{{ item.name }}:</span>
             <single-upload v-model="item.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
           </div>
@@ -71,10 +71,10 @@
       </el-form-item>
       <el-form-item label="商品参数：">
         <el-card shadow="never" class="cardBg">
-          <div v-for="(item, index) in selectProductParam" :class="{ littleMarginTop: index !== 0 }">
+          <div v-for="(item, index) in selectProductParam" :class="{ littleMarginTop: index !== 0 }" :key="index">
             <div class="paramInputLabel">{{ item.name }}:</div>
             <el-select v-if="item.inputType === 1" class="paramInput" v-model="selectProductParam[index].value">
-              <el-option v-for="item in getParamInputList(item.inputList)" :key="item" :label="item" :value="item"> </el-option>
+              <el-option v-for="(item, index) in getParamInputList(item.inputList)" :key="index" :label="item" :value="item"> </el-option>
             </el-select>
             <el-input v-else class="paramInput" v-model="selectProductParam[index].value"></el-input>
           </div>
