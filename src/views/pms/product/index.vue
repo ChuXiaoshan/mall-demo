@@ -453,7 +453,7 @@ export default {
     handleRecommendStatusChange(index, row) {
       let ids = []
       ids.push(row.id)
-      this.updateRecommendStatus(row.recommendStatus, ids)
+      this.updateRecommendStatus(row.recommandStatus, ids)
     },
     handleResetSearch() {
       this.selectProductCateValue = []
